@@ -4,96 +4,61 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 public class MyListIteratorCustomTester {
-
-    /**
-     * This sets up the test fixture. JUnit invokes this method before
-     * every testXXX method. The @Before tag tells JUnit to run this method
-     * before each test.
-     */
     @Before
     public void setUp() throws Exception {
-
+        MyLinkedList<Integer>x=new MyLinkedList<>();
+        x.add(3);
+        x.add(4);
+        x.add(5);
+        MyListIterator y = x.new MyListIterator();
     }
-
-    /**
-     * Aims to test the next() method when iterator is at end of the list 
-     */
     @Test
     public void testNextEnd() {
-
+        for(int i=0;i<2;i++){
+            y.next();
+        }
+        assertThrows(NoSuchElementException.class,()->{y.next();});
     }
-
-    /**
-     * Aims to test the previous() method when iterator is at the start of the 
-     * list 
-     */
     @Test
     public void testPreviousStart() {
-        
+        assertThrows(NoSuchElementException.class,()->{y.previous();});
     }
-
-    /**
-     * Aims to test the add(E e) method when an invalid element is added
-     */
     @Test
     public void testAddInvalid() {
-
+        assertThrows(NullPointerException.class,()->{y.add(null);});
     }
-
-    /**
-     * Aims to test the set(E e) method when canRemoveOrSet is false
-     */
     @Test
     public void testCantSet() {
-
+        y.remove();
+        assertThrows(IllegalStateException.class,()->{y.set(1);});
     }
-
-
-    /**
-     * Aims to test the set(E e) method when an invalid element is set
-     */
     @Test
     public void testSetInvalid() {
-
+        assertThrows(NullPointerException.class,()->{y.set(null);});
     }
-
-    /**
-     * Aims to test the remove() method when canRemoveOrSet is false
-     */
     @Test
     public void testCantRemove() {
-
+        y.remove();
+        assertThrows(IllegalStateException.class,()->{y.remove();});
     }
-
-    /**
-     * Aims to tests the hasNext() method at the end of a list
-     */
     @Test
     public void testHasNextEnd() {
-
+        for(int i=0;i<3;i++){
+            y.next();
+        }
+        assertEquals(null,y.right);
     }
-
-    /**
-     * Aims to test the hasPrevious() method at the start of a list
-     */
     @Test
     public void testHasPreviousStart() {
-
+        assertEquals(null,y.left);
     }
-
-    /**
-     * Aims to test the previousIndex() method at the start of a list
-     */
     @Test
     public void testPreviousIndexStart() {
-
+        assertEquals(0,y.previousIndex());
     }
-
-    /**
-     * Aims to test the nextIndex() method at the end of a list
-     */
     @Test
     public void testNextIndexEnd() {
-
+        assertEquals(1,y.nextIndex());
     }
 }
+
