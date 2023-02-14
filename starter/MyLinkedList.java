@@ -146,14 +146,14 @@ public class MyLinkedList<E> extends AbstractList<E>{
         boolean canRemoveOrSet;
         int count = 0;
         public MyListIterator(){
-            this.left=this.head;
+            this.left=head;
             this.right=this.left.next;    
             this.index=0;
             this.forward=false;
             this.canRemoveOrSet=false;
         }
         public boolean hasNext(){
-            if(this.right!=null)
+            if(this.right.data!=null)
                 return true;
             return false;
         }
@@ -165,7 +165,7 @@ public class MyLinkedList<E> extends AbstractList<E>{
             count++;
             if(this.left==null)
                 throw new NoSuchElementException();
-            return this.left;
+            return this.left.data;
         }
         public boolean hasPrevious(){
             if(this.left!=null)
@@ -180,7 +180,7 @@ public class MyLinkedList<E> extends AbstractList<E>{
             count++;
             if(this.right==null)
                 throw new NoSuchElementException();
-            return this.right;
+            return this.right.data;
         }
         public int nextIndex(){
             this.next();
@@ -204,17 +204,17 @@ public class MyLinkedList<E> extends AbstractList<E>{
             }
         }
         public void set(E element){
-            if(data==null)
+            if(element==null)
                 throw new NullPointerException();
-            else if(this.canRemoveOrSet==false||count!=0;)
+            else if(this.canRemoveOrSet==false||count!=0)
                 throw new IllegalStateException();
-            else if(this.next()){
+            else if(forward){
                 Node x=new Node(element);
                 x.setPrev(this.left.prev);
                 x.setNext(this.left.next);
                 this.left.prev.setNext(x);
                 this.left.next.setPrev(x);
-            else if(this.next()){
+            }else{
                 Node y=new Node(element);
                 y.setPrev(this.right.prev);
                 y.setNext(this.right.next);
@@ -225,16 +225,14 @@ public class MyLinkedList<E> extends AbstractList<E>{
         public void remove(){
             if(this.canRemoveOrSet==false)
                 throw new IllegalStateException();
-            else if(this.next()){
+            else if(forward){
                 this.left.prev.setNext(this.right);
                 this.right.setPrev(this.left.prev);
                 this.canRemoveOrSet=false;
-            }
-            else if(this.next()){
+            }else{
                 this.right.prev.setNext(this.left);
                 this.left.setPrev(this.right.prev);
                 this.canRemoveOrSet=false;
-                return x.getElement();
             }
         }
     }
