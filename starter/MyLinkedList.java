@@ -138,59 +138,64 @@ public class MyLinkedList<E> extends AbstractList<E>{
             return x;
         }
     }
-    protected class MyListIterator implements ListIterator<E>{
-        Node left;
-        Node right;
-        int index;
-        boolean forward;
-        boolean canRemoveOrSet;
-        int count = 0;
-        public MyListIterator(){
+	protected class MyListIterator implements ListIterator<E> {
+		Node left;
+		Node right;
+		int idx;
+		boolean forward;
+		boolean canRemoveOrSet;
+		public MyListIterator(){
             this.left=head;
             this.right=this.left.next;    
-            this.index=0;
-            this.forward=false;
+            this.idx=0;
+            this.forward=true;
             this.canRemoveOrSet=false;
         }
-        public boolean hasNext(){
-            if(this.right.data!=null)
+		public boolean hasNext(){
+            if(this.right!=tail){
                 return true;
-            return false;
+			}else{
+				return false;
+			}
         }
-        public E next(){
-            this.index++;
-            this.left=this.right;
-            this.right=this.right.next;
-            this.forward=true;
-            count++;
-            if(this.left==null)
-                throw new NoSuchElementException();
-            return this.left.data;
+		public E next(){
+			if(!hasNext()){
+				throw new NoSuchElementException();
+			}else{
+				this.idx++;
+				this.left=this.right;
+				this.right=this.right.next;
+				this.forward=true;
+				this.canRemoveOrSet=true;
+				return this.left.data;
+			}
         }
         public boolean hasPrevious(){
-            if(this.left!=null)
+            if(this.idx>0){
                 return true;
-            return false;
+			}else{
+				return false;
+			}
         }
-        public E previous(){
-            this.index--;
-            this.right=this.left;
-            this.left=this.left.prev;
-            this.forward=false;
-            count++;
-            if(this.right==null)
-                throw new NoSuchElementException();
-            return this.right.data;
+		public E previous(){
+			if(!hasPrevious()){
+				throw new NoSuchElementException();
+			}else{
+				this.idx--;
+				this.right=this.left;
+				this.left=this.left.prev;
+				this.forward=false;
+				this.canRemoveOrSet=true;
+				return this.right.data;
+			}
         }
-        public int nextIndex(){
-            this.next();
-            return this.index;
-        }
-        public int previousIndex(){
-            this.previous();
-            return this.index;
-        }
-        public void add(E element){
+		public int nextIndex(){
+			return this.idx;
+		}
+		public int previousIndex(){
+			return this.idx-1;
+		}
+		public void add(E element){
             if(element==null)
                 throw new NullPointerException();
             else{
@@ -199,41 +204,40 @@ public class MyLinkedList<E> extends AbstractList<E>{
                 x.setPrev(this.left);
                 x.setNext(this.right);
                 this.right.setPrev(x);
-                this.index++;
+				this.left=x;
+                this.idx++;
+				size++;
                 this.canRemoveOrSet=false;
             }
         }
-        public void set(E element){
+		public void set(E element){
             if(element==null)
                 throw new NullPointerException();
-            else if(this.canRemoveOrSet==false||count!=0)
+            else if(this.canRemoveOrSet==false)
                 throw new IllegalStateException();
             else if(forward){
-                Node x=new Node(element);
-                x.setPrev(this.left.prev);
-                x.setNext(this.left.next);
-                this.left.prev.setNext(x);
-                this.left.next.setPrev(x);
+				this.left.data=element;
             }else{
-                Node y=new Node(element);
-                y.setPrev(this.right.prev);
-                y.setNext(this.right.next);
-                this.right.prev.setNext(y);
-                this.right.next.setPrev(y);
+                this.right.data=element;
             }
         }
-        public void remove(){
+		public void remove(){
             if(this.canRemoveOrSet==false)
                 throw new IllegalStateException();
             else if(forward){
                 this.left.prev.setNext(this.right);
                 this.right.setPrev(this.left.prev);
+				this.left=this.left.prev;
+				this.idx--;
+				size--;
                 this.canRemoveOrSet=false;
             }else{
-                this.right.prev.setNext(this.left);
-                this.left.setPrev(this.right.prev);
+                this.left.setNext(this.right.next);
+                this.right.next.setPrev(this.left);
+				this.right=this.right.next;
+				size--;
                 this.canRemoveOrSet=false;
             }
         }
-    }
+	}
 }
